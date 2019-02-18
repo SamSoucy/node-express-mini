@@ -36,6 +36,28 @@ server.get("/api/users/:id", (req, res) => {
 });
 
 
+server.post("/api/users", (req, res) => {
+    const user = req.body;
+    if (user.name && user.bio) {
+        db.insert(user)
+            .then(use => {
+                db.findById(use.id)
+                    .then(user => {
+                        res.status(201).json({ success: true, use });
+                    })
+            
+            })
+            .catch(err => {
+                res.status(500).json({ success: false, error: "There was an error while saving the user to the database" })
+            });
+    
+    } else {
+        res.status(400).json({ errormessage: "Please provide name and bio for the user." });
+    };
+});
+
+
+
 
 
 server.listen(3000, () => {
